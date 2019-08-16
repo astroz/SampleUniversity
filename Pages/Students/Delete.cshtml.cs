@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using MongoDB.Driver;
 using SampleUniversity.Data;
 using SampleUniversity.Models;
+using IAsyncCursorExtensions = MongoDB.Driver.IAsyncCursorExtensions;
 
-namespace SampleUniversity.Pages.Students {
+namespace SampleUniversity.Pages_Students {
     public class DeleteModel : PageModel {
         private readonly StudentContext _context;
 

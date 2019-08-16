@@ -6,7 +6,7 @@ using MongoDB.Driver;
 using SampleUniversity.Data;
 using SampleUniversity.Models;
 
-namespace SampleUniversity.Pages.Students {
+namespace SampleUniversity.Pages_Students {
     public class EditModel : PageModel {
         private readonly IStudentContext _context;
 
