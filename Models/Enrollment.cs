@@ -1,4 +1,5 @@
-using ContosoUniversity.Models;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace SampleUniversity.Models {
     public enum Grade {
@@ -10,7 +11,10 @@ namespace SampleUniversity.Models {
     }
 
     public class Enrollment {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
         public int EnrollmentId { get; set; }
+
         public int CourseId { get; set; }
         public int StudentId { get; set; }
         public Grade? Grade { get; set; }

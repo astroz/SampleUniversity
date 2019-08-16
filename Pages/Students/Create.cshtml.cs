@@ -1,17 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using SampleUniversity.Data;
 using SampleUniversity.Models;
 
-namespace SampleUniversity.Pages_Students {
+namespace SampleUniversity.Pages.Students {
     public class CreateModel : PageModel {
-        private readonly SampleUniversity.Models.SchoolContext _context;
+        private readonly IStudentContext _context;
 
-        public CreateModel(SampleUniversity.Models.SchoolContext context) {
+        public CreateModel(IStudentContext context) {
             _context = context;
         }
 
@@ -26,8 +23,7 @@ namespace SampleUniversity.Pages_Students {
                 return Page();
             }
 
-            _context.Student.Add(Student);
-            await _context.SaveChangesAsync();
+            await _context.Students.InsertOneAsync(Student);
 
             return RedirectToPage("./Index");
         }

@@ -1,9 +1,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using SampleUniversity.Models;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
-namespace ContosoUniversity.Models {
+namespace SampleUniversity.Models {
     public class Course {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int CourseID { get; set; }
 

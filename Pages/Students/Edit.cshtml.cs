@@ -1,29 +1,28 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
+using SampleUniversity.Data;
 using SampleUniversity.Models;
 
-namespace SampleUniversity.Pages_Students {
+namespace SampleUniversity.Pages.Students {
     public class EditModel : PageModel {
-        private readonly SampleUniversity.Models.SchoolContext _context;
+        private readonly IStudentContext _context;
 
-        public EditModel(SampleUniversity.Models.SchoolContext context) {
+        public EditModel(IStudentContext context) {
             _context = context;
         }
 
         [BindProperty] public Student Student { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id) {
+        public async Task<IActionResult> OnGetAsync(string id) {
             if (id == null) {
                 return NotFound();
             }
 
-            Student = await _context.Student.FirstOrDefaultAsync(m => m.ID == id);
+            var filter = Builders<Student>.Filter.Empty;
+            Student = await _context.Students.FindSync(m => m.Id == id).FirstOrDefaultAsync();
 
             if (Student == null) {
                 return NotFound();
@@ -37,13 +36,12 @@ namespace SampleUniversity.Pages_Students {
                 return Page();
             }
 
-            _context.Attach(Student).State = EntityState.Modified;
-
             try {
-                await _context.SaveChangesAsync();
+                await _context.Students.FindOneAndReplaceAsync<Student>(
+                    Builders<Student>.Filter.Eq(s => s.Id, Student.Id), Student);
             }
             catch (DbUpdateConcurrencyException) {
-                if (!StudentExists(Student.ID)) {
+                if (!StudentExists(Student.Id)) {
                     return NotFound();
                 }
                 else {
@@ -54,8 +52,8 @@ namespace SampleUniversity.Pages_Students {
             return RedirectToPage("./Index");
         }
 
-        private bool StudentExists(int id) {
-            return _context.Student.Any(e => e.ID == id);
+        private bool StudentExists(string id) {
+            return _context.Students.FindSync(e => e.Id == id).FirstOrDefault() != null;
         }
     }
 }

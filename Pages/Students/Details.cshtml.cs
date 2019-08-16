@@ -1,28 +1,26 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
+using SampleUniversity.Data;
 using SampleUniversity.Models;
 
-namespace SampleUniversity.Pages_Students {
+namespace SampleUniversity.Pages.Students {
     public class DetailsModel : PageModel {
-        private readonly SampleUniversity.Models.SchoolContext _context;
+        private readonly IStudentContext _context;
 
-        public DetailsModel(SampleUniversity.Models.SchoolContext context) {
+        public DetailsModel(IStudentContext context) {
             _context = context;
         }
 
         public Student Student { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id) {
+        public async Task<IActionResult> OnGetAsync(string id) {
             if (id == null) {
                 return NotFound();
             }
 
-            Student = await _context.Student.FirstOrDefaultAsync(m => m.ID == id);
+            Student = await _context.Students.FindSync(m => m.Id == id).FirstOrDefaultAsync();
 
             if (Student == null) {
                 return NotFound();
